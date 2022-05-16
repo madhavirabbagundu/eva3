@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>search_page</title>
+</head>
+<style>
+     .div1{
+        width:1000px;
+       height:100px;
+    border: 1px solid black;
+    padding:20px;
+    margin-left:50px;
+     }
+     a {
+    font-size:30px;
+    margin:10px;
+}
+#query{
+    width:600px;
+    height:40px;
+    margin-left:90px;
+
+}
+#brewery{
+    width:600px;
+    /* height:20px; */
+    margin-left:90px;
+    border:1px solid black;
+    text-align: center;
+    font-size: 20px;
+    background-color: aqua;
+    color:black;
+
+}
+#brewery > div{
+    border: 1px solid black;
+    width:900px;
+    color:red;
+}
+#container,h1{
+    width:400px;
+    text-align: center;
+    border: 1px solid black;
+    margin-left:800px;
+    background-color: blueviolet;
+    font-size: 40px;
+}
+#container > div{
+    border:1px solid black;
+    width:900px;
+    height:150px;
+    align-items: center;
+    /* text-align: center; */
+}
+
+</style>
+<body>
+    <h1>Search_page</h1>
+    <div class = "div1">
+            
+        <a href = "home.html" style = "width:500px;height:100px;">Home</a>
+        <a href = "search.html">search</a>
+        <a href = "Brewery.html">Brewery</a>
+        </div>
+
+
+        <h1 >Search Box</h1>
+        <input type ="text" id= "query" oninput = "debounce(main,1000)">
+        <div id = "brewery"></div>
+        <h1 style = "color:brown;margin-left:790px;background-color: bisque;">properties</h1>
+        <div id= "container"></div> 
+</body>
+</html>
+
+<script>
+    async function main(){
+    try{
+        let data = await searchmovie();
+        if(!data){
+            return false;
+        }
+        appendData(data)
+
+
+      
+    }
+        catch(error){
+            console.log(error)
+        
+    }
+}
+async function searchmovie(){
+
+    try{
+        let movie = document.getElementById('query').value;
+        let res = await fetch(
+           'https://api.openbrewerydb.org/breweries'
+        );
+        let data = await res.json();
+        console.log(data)
+        // return dataddd
+        return data;  
+         
+    }
+    catch(error){
+        console.log(error)
+    }
+
+}
+
+let element = document.getElementById('brewery');
+let container = document.getElementById('container')
+function appendData(data){
+    console.log(data.name)
+    data.forEach((output) => {
+        // console.log()
+   let p = document.createElement("p");
+
+   p.textContent = output.name;
+
+
+
+   let type = document.createElement("p")
+   type.textContent = output.type
+
+   let city = document.createElement("p")
+   city.innerText = "city:  "+output.city
+
+   let state= document.createElement("p")
+   state.textContent = "state: "+output.state;
+
+   let Type= document.createElement("p")
+   Type.textContent = "type: "+output.Type;
+
+   var space = document.createElement("p")
+   space.textContent="*"
+   
+    container.append(city," **** ",type,state)
+   
+
+   element.append(p)
+   
+        
+    });
+}
+
+let timerId;
+function debounce(func,delay){
+
+    if(timerId){
+clearTimeout(timerId)
+    }
+    timerId = setTimeout(function(){
+        func();
+
+    },delay)
+}
+
+</script>
